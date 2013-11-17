@@ -1,0 +1,26 @@
+#!/bin/sh
+
+## Code is borrowed from https://github.com/miyagawa/heroku-buildpack-perl/blob/master/bin/compile
+
+indent() {
+    sed -u 's/^/ /'
+}
+
+BUILD_DIR="$OPENSHIFT_REPO_DIR"
+PATH="$BUILD_DIR/local/bin:$PATH"
+
+export PERL5LIB="$BUILD_DIR/local/lib/perl5"
+export PERL_CPANM_OPT="--quiet --notest -l $BUILD_DIR/local"
+
+cd "$OPENSHIFT_PLACK_DIR/usr"
+
+if [ -e $BUILD_DIR/local/bin/cpanm ]; then
+    echo "-----> Upgrading modules necessary for PLACK cartridge"
+    cpanm --installdeps . 2>&1 | indent
+else
+    echo "-----> Installing modules necessary for PLACK cartridge"
+    curl --silent https://raw.github.com/miyagawa/cpanminus/master/cpanm | perl - --installdeps . 2>&1 | indent
+fi
+
+echo "Cartrdige setup completed"
+

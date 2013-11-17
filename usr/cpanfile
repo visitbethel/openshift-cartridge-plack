@@ -1,0 +1,5 @@
+# Modules that PLACK cartridge itself needs
+
+requires "App::cpanminus";
+requires "Daemon::Control";
+
