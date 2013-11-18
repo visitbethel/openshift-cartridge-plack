@@ -3,4 +3,3 @@
 requires "App::cpanminus";
 requires "Plack";
 requires "Daemon::Control";
-requires "IO::Pipe";
