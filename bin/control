@@ -1,114 +1,44 @@
-#!/usr/bin/env perl
+#!/bin/bash
 
-use strict;
-use warnings;
-## use Daemon::Control;
-## use IO::Pipe;
+exit 0
 
-exit 0;
+LIB_DIR="${OPENSHIFT_PLACK_DIR}/local"
+export $PERL_CPANM_OPT="--quiet --notest -l $LIB_DIR"
+export $PATH="$LIB_DIR/bin:$PATH"
 
-my $LIB_DIR = "$ENV{OPENSHIFT_PLACK_DIR}/local";
-$ENV{PERL_CPANM_OPT} = "--quiet --notest -l $LIB_DIR";
-$ENV{PATH} = "$LIB_DIR/bin:$ENV{PATH}";
-
-close(STDERR);
-open(STDERR, ">&STDOUT");
-
-sub client_out {
-    my ($type, $message) = @_;
-    my @lines = split(/\n/, $message);
-    print "$type: $_\n" foreach @lines;
+daemon_control() {
+    local command="$1"
+    "${OPENSHIFT_PLACK_DIR}/bin/daemon_control" "$command"
+    exit $?
 }
 
-sub client_message {
-    my ($message) = @_;
-    client_out "CLIENT_MESSAGE", $message;
+tidy() {
+    echo "-----> Clean up logs in $OPENSHIFT_PLACK_LOG_DIR"
+    shopt -s dotglob
+    rm -vf "$OPENSHIFT_PLACK_LOG_DIR"/*
+    echo "-----> Done"
 }
 
-sub run_external {
-    my (@commands) = @_;
-    my $pipe = IO::Pipe->new;
-    my $pid = fork();
-    if(!defined($pid)) {
-        client_out "CLIENT_ERROR", "Cannot fork()";
-        exit 1;
-    }elsif(!$pid) {
-        $pipe->writer();
-        open STDOUT, ">&", $pipe->fileno;
-        exec @commands;
-    }
-    $pipe->reader();
-    while(defined(my $line = $pipe->getline)) {
-        client_message $line;
-    }
-    local $?;
-    waitpid $pid, 0;
-    return ($? >> 8);
+build() {
+    echo "-----> Installing dependency"
+    cd "$ENV{OPENSHIFT_REPO_DIR}"
+    if ! (cpanm --installdeps .); then
+        exit 1
+    fi
+    echo "-----> Testing"
+    if ! prove; then
+        exit 1
+    fi
+    echo "-----> Done"
 }
 
-sub standard_control {
-    Daemon::Control->new({
-        name => $ENV{OPENSHIFT_APP_NAME},
-        program => "$LIB_DIR/bin/plackup",
-        program_args => ["$ENV{OPENSHIFT_REPO_DIR}/app.psgi",
-                         "--port", "$ENV{OPENSHIFT_PLACK_PORT}", "--host", "$ENV{OPENSHIFT_PLACK_IP}"],
-        ## init_config => "path/to/shell_script/to/set/environment",
-        pid_file => "$ENV{OPENSHIFT_PLACK_DIR}/run/plackup.pid",
-        fork => 2,
-    })->run();
-}
-
-
-my $ENV_FILE = "$ENV{OPENSHIFT_REPO_DIR}/env.pl";
-if(-f $ENV_FILE) {
-    local $@;
-    local $!;
-    my $ret = do($ENV_FILE);
-    if(!defined($ret)) {
-        if($@) {
-            client_message "Error while compiling env.pl: $@\n";
-            exit 1;
-        }elsif($!) {
-            client_message "Error while reading env.pl: $!\n";
-            exit 1;
-        }
-    }
-}
-
-my $action = $ARGV[0];
-
-if(!$action) {
-    client_message "action is not specified\n";
-    exit 1;
-}
-
-my %action_handler_for = (
-    (map { $_ => \&standard_control } qw(start stop restart reload status)),
-    build => sub {
-        client_message "-----> Installing dependency\n";
-        chdir "$ENV{OPENSHIFT_REPO_DIR}";
-        my $result = run_external("cpanm", "--installdeps", ".");
-        if($result != 0) {
-            exit $result;
-        }
-        client_message "-----> Testing\n";
-        $result = run_external("prove");
-        if($result != 0) {
-            exit $result;
-        }
-        client_message "-----> Done\n";
-    },
-    tidy => sub {
-        client_message "-----> Clean up logs\n";
-        run_external("rm -vf '$ENV{OPENSHIFT_PLACK_LOG_DIR}'/*");
-        client_message "-----> Done\n";
-    },
-);
-
-my $handler = $action_handler_for{$action};
-if($handler) {
-    $handler->();
-}else {
-    client_message "No handler for $action\n";
-}
-exit 0;
+case "$1" in
+    start)   
+    stop)    
+    restart) 
+    status)  
+    reload)  daemon_control ;;
+    tidy)    tidy ;;
+    build)   build ;;
+    *)       exit 0
+esac
