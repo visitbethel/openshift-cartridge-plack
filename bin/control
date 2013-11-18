@@ -9,6 +9,7 @@ exit 0;
 
 my $LIB_DIR = "$ENV{OPENSHIFT_PLACK_DIR}/local";
 $ENV{PERL_CPANM_OPT} = "--quiet --notest -l $LIB_DIR";
+$ENV{PATH} = "$LIB_DIR/bin:$ENV{PATH}";
 
 close(STDERR);
 open(STDERR, ">&STDOUT");
@@ -38,7 +39,7 @@ sub run_external {
     }
     $pipe->reader();
     while(defined(my $line = $pipe->getline)) {
-        client_out "CLIENT_ERROR", 
+        client_message $line;
     }
     local $?;
     waitpid $pid, 0;
@@ -49,7 +50,8 @@ sub standard_control {
     Daemon::Control->new({
         name => $ENV{OPENSHIFT_APP_NAME},
         program => "$LIB_DIR/bin/plackup",
-        program_args => ["$ENV{OPENSHIFT_REPO_DIR}/app.psgi", "--port", "$ENV{OPENSHIFT_PLACK_PORT}"],
+        program_args => ["$ENV{OPENSHIFT_REPO_DIR}/app.psgi",
+                         "--port", "$ENV{OPENSHIFT_PLACK_PORT}", "--host", "$ENV{OPENSHIFT_PLACK_IP}"],
         ## init_config => "path/to/shell_script/to/set/environment",
         pid_file => "$ENV{OPENSHIFT_PLACK_DIR}/run/plackup.pid",
         fork => 2,
