@@ -34,3 +34,15 @@ the PSGI server of your choice and runs your application on it.
   Directory path in which you should store your log files. It is up to
   you to write and rotate logs in this directory. The log files are
   cleaned up by "rhc app tidy YOUR_APP_NAME" command.
+
+
+## Module Management
+
+CPAN modules are installed by `cpanm` tool.
+
+- Directory ${OPENSHIFT_PLACK_DIR}.cpanm :
+  Internal metadata and log files of `cpanm` are stored.
+
+- Directory ${OPENSHIFT_PLACK_DIR}local :
+  External CPAN modules are installed.
+
