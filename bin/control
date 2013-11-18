@@ -39,7 +39,7 @@ my %action_handler_for = (
             exit $result;
         }
         print "-----> Testing\n";
-        $result = system("prove", "-r", "t");
+        $result = system("prove");
         if($result != 0) {
             exit $result;
         }
