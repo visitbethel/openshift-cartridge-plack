@@ -1,4 +1,9 @@
-# Plack/PSGI Perl application
+# OpenShift Cartridge for Plack/PSGI Perl application
+
+The `plack` cartridge helps you create Perl Web applications based on
+a pure Plack/PSGI infractructure. It uses `plackup` command to start
+the PSGI server of your choice and runs your application on it.
+
 
 ## Structure
 
