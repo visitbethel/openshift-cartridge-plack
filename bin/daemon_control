@@ -4,17 +4,17 @@ use strict;
 use warnings;
 use Daemon::Control;
 
-my $ENV_FILE = "$ENV{OPENSHIFT_REPO_DIR}/env.pl";
-if(-f $ENV_FILE) {
+my $CONFIG_FILE = "$ENV{OPENSHIFT_REPO_DIR}/plack_config.pl";
+if(-f $CONFIG_FILE) {
     local $@;
     local $!;
-    my $ret = do($ENV_FILE);
+    my $ret = do($CONFIG_FILE);
     if(!defined($ret)) {
         if($@) {
-            print "Error while compiling env.pl: $@\n";
+            print "Error while compiling plack_config.pl: $@\n";
             exit 1;
         }elsif($!) {
-            print "Error while reading env.pl: $!\n";
+            print "Error while reading plack_config.pl: $!\n";
             exit 1;
         }
     }

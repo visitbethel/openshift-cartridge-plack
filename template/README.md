@@ -13,7 +13,7 @@ the PSGI server of your choice and runs your application on it.
 - cpanfile :
   List of CPAN modules that your application depends on.
   
-- env.pl :
+- plack_config.pl :
   Script to set environment variables to control how "plackup" should work.
   
 - lib/ :
