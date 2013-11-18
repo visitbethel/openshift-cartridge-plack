@@ -33,4 +33,4 @@ the PSGI server of your choice and runs your application on it.
 - OPENSHIFT_PLACK_LOG_DIR :
   Directory path in which you should store your log files. It is up to
   you to write and rotate logs in this directory. The log files are
-  cleaned up by "tidy" command.
+  cleaned up by "rhc app tidy YOUR_APP_NAME" command.
