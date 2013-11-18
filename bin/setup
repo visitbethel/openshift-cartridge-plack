@@ -1,5 +1,7 @@
 #!/bin/bash
 
+exit 0
+
 ## Code is borrowed from https://github.com/miyagawa/heroku-buildpack-perl/blob/master/bin/compile
 
 source $OPENSHIFT_CARTRIDGE_SDK_BASH

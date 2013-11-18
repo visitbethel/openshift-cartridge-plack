@@ -5,6 +5,8 @@ use warnings;
 use Daemon::Control;
 use IO::Pipe;
 
+exit 0
+
 my $LIB_DIR = "$ENV{OPENSHIFT_PLACK_DIR}/local";
 $ENV{PERL_CPANM_OPT} = "--quiet -l '$LIB_DIR'";
 
