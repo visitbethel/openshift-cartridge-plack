@@ -1,7 +1,5 @@
 #!/bin/bash
 
-exit 0
-
 LIB_DIR="${OPENSHIFT_PLACK_DIR}/local"
 export PERL_CPANM_OPT="--quiet --notest -l $LIB_DIR"
 export PATH="$LIB_DIR/bin:$PATH"
