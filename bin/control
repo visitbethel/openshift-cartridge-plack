@@ -3,12 +3,45 @@
 use strict;
 use warnings;
 use Daemon::Control;
+use IO::Pipe;
 
 my $LIB_DIR = "$ENV{OPENSHIFT_PLACK_DIR}/local";
 $ENV{PERL_CPANM_OPT} = "--quiet -l '$LIB_DIR'";
 
 close(STDERR);
 open(STDERR, ">&STDOUT");
+
+sub client_out {
+    my ($type, $message) = @_;
+    my @lines = split(/\n/, $message);
+    print "$type: $_\n" foreach @lines;
+}
+
+sub client_message {
+    my ($message) = @_;
+    client_out "CLIENT_MESSAGE", $message;
+}
+
+sub run_external {
+    my (@commands) = @_;
+    my $pipe = IO::Pipe->new;
+    my $pid = fork();
+    if(!defined($pid)) {
+        client_out "CLIENT_ERROR", "Cannot fork()";
+        exit 1;
+    }elsif(!$pid) {
+        $pipe->writer();
+        open STDOUT, ">&", $pipe->fileno;
+        exec @commands;
+    }
+    $pipe->reader();
+    while(defined(my $line = $pipe->getline)) {
+        client_out "CLIENT_ERROR", 
+    }
+    local $?;
+    waitpid $pid, 0;
+    return ($? >> 8);
+}
 
 sub standard_control {
     Daemon::Control->new({
@@ -29,10 +62,10 @@ if(-f $ENV_FILE) {
     my $ret = do($ENV_FILE);
     if(!defined($ret)) {
         if($@) {
-            print "Error while compiling env.pl: $@\n";
+            client_message "Error while compiling env.pl: $@\n";
             exit 1;
         }elsif($!) {
-            print "Error while reading env.pl: $!\n";
+            client_message "Error while reading env.pl: $!\n";
             exit 1;
         }
     }
@@ -41,30 +74,30 @@ if(-f $ENV_FILE) {
 my $action = $ARGV[0];
 
 if(!$action) {
-    print "action is not specified\n";
+    client_message "action is not specified\n";
     exit 1;
 }
 
 my %action_handler_for = (
     (map { $_ => \&standard_control } qw(start stop restart reload status)),
     build => sub {
-        print "-----> Installing dependency\n";
+        client_message "-----> Installing dependency\n";
         chdir "$ENV{OPENSHIFT_REPO_DIR}";
-        my $result = system("$LIB_DIR/bin/cpanm", "--installdeps", ".");
+        my $result = run_external("$LIB_DIR/bin/cpanm", "--installdeps", ".");
         if($result != 0) {
             exit $result;
         }
-        print "-----> Testing\n";
-        $result = system("prove");
+        client_message "-----> Testing\n";
+        $result = run_external("prove");
         if($result != 0) {
             exit $result;
         }
-        print "-----> Done\n";
+        client_message "-----> Done\n";
     },
     tidy => sub {
-        print "-----> Clean up logs\n";
-        system("rm -f '$OPENSHIFT_PLACK_LOG_DIR'/*");
-        print "-----> Done\n";
+        client_message "-----> Clean up logs\n";
+        run_external("rm -vf '$OPENSHIFT_PLACK_LOG_DIR'/*");
+        client_message "-----> Done\n";
     },
 );
 
@@ -72,6 +105,6 @@ my $handler = $action_handler_for{$action};
 if($handler) {
     $handler->();
 }else {
-    print "No handler for $action\n";
+    client_message "No handler for $action\n";
 }
 exit 0;
