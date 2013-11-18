@@ -1,3 +1,6 @@
+use strict;
+use warnings;
+
 sub {
     my $env = shift;
     my $body = "It works!";
