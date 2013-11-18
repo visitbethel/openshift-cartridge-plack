@@ -60,7 +60,12 @@ my %action_handler_for = (
             exit $result;
         }
         print "-----> Done\n";
-    }
+    },
+    tidy => sub {
+        print "-----> Clean up logs\n";
+        system("rm -f '$OPENSHIFT_PLACK_LOG_DIR'/*");
+        print "-----> Done\n";
+    },
 );
 
 my $handler = $action_handler_for{$action};
