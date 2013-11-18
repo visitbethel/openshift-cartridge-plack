@@ -4,6 +4,22 @@ use strict;
 use warnings;
 use Daemon::Control;
 
+my $ENV_FILE = "$ENV{OPENSHIFT_REPO_DIR}/env.pl";
+if(-f $ENV_FILE) {
+    local $@;
+    local $!;
+    my $ret = do($ENV_FILE);
+    if(!defined($ret)) {
+        if($@) {
+            print "Error while compiling env.pl: $@\n";
+            exit 1;
+        }elsif($!) {
+            print "Error while reading env.pl: $!\n";
+            exit 1;
+        }
+    }
+}
+
 Daemon::Control->new({
     name => $ENV{OPENSHIFT_APP_NAME},
     program => "plackup",
