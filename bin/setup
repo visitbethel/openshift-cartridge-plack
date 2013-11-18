@@ -15,7 +15,7 @@ fi
 PATH="$LIB_DIR/bin:$PATH"
 
 export PERL5LIB="$LIB_DIR/lib/perl5"
-export PERL_CPANM_OPT="--quiet --notest -l $LIB_DIR"
+export PERL_CPANM_OPT="--quiet --notest -l '$LIB_DIR'"
 
 cd "$OPENSHIFT_PLACK_DIR/usr"
 

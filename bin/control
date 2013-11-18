@@ -4,10 +4,15 @@ use strict;
 use warnings;
 use Daemon::Control;
 
+my $LIB_DIR = "$ENV{OPENSHIFT_PLACK_DIR}/local";
+local $ENV{PERL_CPANM_OPT} = "--quiet -l '$LIB_DIR'";
+close(STDERR);
+open(STDERR, ">&STDOUT");
+
 sub standard_control {
     Daemon::Control->new({
         name => $ENV{OPENSHIFT_APP_NAME},
-        program => "$ENV{OPENSHIFT_REPO_DIR}/local/bin/plackup",
+        program => "$LIB_DIR/bin/plackup",
         program_args => ["$ENV{OPENSHIFT_REPO_DIR}/app.psgi", "--port", "$ENV{OPENSHIFT_PLACK_PORT}"],
         ## init_config => "path/to/shell_script/to/set/environment",
         pid_file => "$ENV{OPENSHIFT_PLACK_DIR}/run/plackup.pid",
@@ -24,6 +29,20 @@ if(!$action) {
 
 my %action_handler_for = (
     (map { $_ => \&standard_control } qw(start stop restart reload status)),
+    build => sub {
+        print "-----> Installing dependency\n";
+        chdir "$ENV{OPENSHIFT_REPO_DIR}";
+        my $result = system("$LIB_DIR/bin/cpanm", "--installdeps", ".");
+        if($result != 0) {
+            exit $result;
+        }
+        print "-----> Testing\n";
+        $result = system("prove", "-rl", "t");
+        if($result != 0) {
+            exit $result;
+        }
+        print "-----> Done\n";
+    }
 );
 
 my $handler = $action_handler_for{$action};
