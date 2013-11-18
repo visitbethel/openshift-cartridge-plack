@@ -12,24 +12,26 @@ pipe_client_message() {
 
 
 LIB_DIR="$OPENSHIFT_PLACK_DIR/local"
-
-if ![ -d "$LIB_DIR" ]; then
-    mkdir -p "$LIB_DIR"
-fi
-
-PATH="$LIB_DIR/bin:$PATH"
-
-export PERL_CPANM_OPT="--quiet --notest -l '$LIB_DIR'"
+export PATH="$LIB_DIR/bin:$PATH"
+export PERL_CPANM_OPT="--quiet --notest -l $LIB_DIR"
 
 cd "$OPENSHIFT_PLACK_DIR/usr"
 
-if [ -e "$LIB_DIR/bin/cpanm" ]; then
-    client_message "-----> Upgrading modules necessary for PLACK cartridge"
-    cpanm --installdeps . 2>&1 | pipe_client_message
-else
-    client_message "-----> Installing modules necessary for PLACK cartridge"
-    curl --silent https://raw.github.com/miyagawa/cpanminus/master/cpanm | perl - --installdeps . 2>&1 | pipe_client_message
+if ! [ -d "$LIB_DIR" ]; then
+    mkdir -p "$LIB_DIR"
+    client_message "-----> Installing cpanm"
+    if ! (curl --silent https://raw.github.com/miyagawa/cpanminus/master/cpanm | perl - App::cpanminus 2>&1 | pipe_client_message); then
+        client_error "setup failed"
+        rm -rf "$LIB_DIR"
+        exit 1
+    fi
+fi
+
+client_message "-----> Installing or upgrading modules necessary for PLACK cartridge"
+if ! (cpanm --installdeps . 2>&1 | pipe_client_message); then
+    client_error "setup failed"
+    rm -rf "$LIB_DIR"
+    exit 1
 fi
 
 client_result "Cartrdige setup completed"
-

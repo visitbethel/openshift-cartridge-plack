@@ -8,7 +8,7 @@ use warnings;
 exit 0;
 
 my $LIB_DIR = "$ENV{OPENSHIFT_PLACK_DIR}/local";
-$ENV{PERL_CPANM_OPT} = "--quiet -l '$LIB_DIR'";
+$ENV{PERL_CPANM_OPT} = "--quiet --notest -l $LIB_DIR";
 
 close(STDERR);
 open(STDERR, ">&STDOUT");
@@ -85,7 +85,7 @@ my %action_handler_for = (
     build => sub {
         client_message "-----> Installing dependency\n";
         chdir "$ENV{OPENSHIFT_REPO_DIR}";
-        my $result = run_external("$LIB_DIR/bin/cpanm", "--installdeps", ".");
+        my $result = run_external("cpanm", "--installdeps", ".");
         if($result != 0) {
             exit $result;
         }
