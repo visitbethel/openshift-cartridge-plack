@@ -8,7 +8,7 @@ License-Url: https://metacpan.org/pod/Plack
 Vendor: Tatsuhiko Miyagawa
 Cartridge-Version: 0.0.1
 Compatible-Versions: []
-Cartridge-Vendor: debug-ito
+Cartridge-Vendor: debug_ito
 Categories:
 - service
 - perl
