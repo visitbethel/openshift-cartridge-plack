@@ -5,7 +5,9 @@ use warnings;
 use Daemon::Control;
 
 my $LIB_DIR = "$ENV{OPENSHIFT_PLACK_DIR}/local";
-local $ENV{PERL_CPANM_OPT} = "--quiet -l '$LIB_DIR'";
+$ENV{PERL_CPANM_OPT} = "--quiet -l '$LIB_DIR'";
+$ENV{PERL5LIB} = "$ENV{OPENSHIFT_REPO_DIR}/lib:$LIB_DIR/lib/perl5:$ENV{PERL5LIB}";
+
 close(STDERR);
 open(STDERR, ">&STDOUT");
 
@@ -37,7 +39,7 @@ my %action_handler_for = (
             exit $result;
         }
         print "-----> Testing\n";
-        $result = system("prove", "-rl", "t");
+        $result = system("prove", "-r", "t");
         if($result != 0) {
             exit $result;
         }
