@@ -3,8 +3,8 @@
 exit 0
 
 LIB_DIR="${OPENSHIFT_PLACK_DIR}/local"
-export $PERL_CPANM_OPT="--quiet --notest -l $LIB_DIR"
-export $PATH="$LIB_DIR/bin:$PATH"
+export PERL_CPANM_OPT="--quiet --notest -l $LIB_DIR"
+export PATH="$LIB_DIR/bin:$PATH"
 
 daemon_control() {
     local command="$1"
@@ -21,7 +21,7 @@ tidy() {
 
 build() {
     echo "-----> Installing dependency"
-    cd "$ENV{OPENSHIFT_REPO_DIR}"
+    cd "${OPENSHIFT_REPO_DIR}"
     if ! (cpanm --installdeps .); then
         exit 1
     fi
@@ -33,11 +33,7 @@ build() {
 }
 
 case "$1" in
-    start)   
-    stop)    
-    restart) 
-    status)  
-    reload)  daemon_control ;;
+    start|stop|restart|status|reload) daemon_control "$1" ;;
     tidy)    tidy ;;
     build)   build ;;
     *)       exit 0
