@@ -6,7 +6,6 @@ use Daemon::Control;
 
 my $LIB_DIR = "$ENV{OPENSHIFT_PLACK_DIR}/local";
 $ENV{PERL_CPANM_OPT} = "--quiet -l '$LIB_DIR'";
-$ENV{PERL5LIB} = "$ENV{OPENSHIFT_REPO_DIR}/lib:$LIB_DIR/lib/perl5:$ENV{PERL5LIB}";
 
 close(STDERR);
 open(STDERR, ">&STDOUT");

@@ -9,12 +9,11 @@ indent() {
 LIB_DIR="$OPENSHIFT_PLACK_DIR/local"
 
 if ![ -d "$LIB_DIR" ]; then
-    mkdir "$LIB_DIR"
+    mkdir -p "$LIB_DIR"
 fi
 
 PATH="$LIB_DIR/bin:$PATH"
 
-export PERL5LIB="$LIB_DIR/lib/perl5"
 export PERL_CPANM_OPT="--quiet --notest -l '$LIB_DIR'"
 
 cd "$OPENSHIFT_PLACK_DIR/usr"
