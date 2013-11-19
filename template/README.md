@@ -9,9 +9,11 @@ the PSGI server of your choice and runs your application on it.
 
 - app.psgi :
   Your PSGI application.
+  See https://metacpan.org/pod/PSGI for how to write PSGI apps.
   
 - cpanfile :
   List of CPAN modules that your application depends on.
+  See https://metacpan.org/pod/cpanfile for how to write cpanfile.
   
 - plack_config.pl :
   Script to set environment variables to control how "plackup" should work.
@@ -38,11 +40,13 @@ the PSGI server of your choice and runs your application on it.
 
 ## Module Management
 
-CPAN modules are installed by `cpanm` tool.
+CPAN modules you depend are automatically installed by `cpanm`
+tool. You should look into the following directories if something goes
+wrong.
 
-- Directory ${OPENSHIFT_PLACK_DIR}.cpanm :
+- Directory ${OPENSHIFT_PLACK_DIR}/.cpanm :
   Internal metadata and log files of `cpanm` are stored.
 
-- Directory ${OPENSHIFT_PLACK_DIR}local :
+- Directory ${OPENSHIFT_PLACK_DIR}/local :
   External CPAN modules are installed.
 
