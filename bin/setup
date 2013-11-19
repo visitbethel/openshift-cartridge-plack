@@ -1,7 +1,5 @@
 #!/bin/bash
 
-## Code is borrowed from https://github.com/miyagawa/heroku-buildpack-perl/blob/master/bin/compile
-
 source $OPENSHIFT_CARTRIDGE_SDK_BASH
 
 pipe_client_message() {
