@@ -10,6 +10,7 @@ pipe_client_message() {
 
 
 LIB_DIR="$OPENSHIFT_PLACK_DIR/local"
+export PATH="$LIB_DIR/bin:$PATH"
 export PERL_CPANM_OPT="--quiet --notest -l $LIB_DIR"
 
 cd "$OPENSHIFT_PLACK_DIR/usr"
