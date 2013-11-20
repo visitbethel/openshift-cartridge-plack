@@ -32,6 +32,12 @@ the PSGI server of your choice and runs your application on it.
 
 ## Environment Variables
 
+OpenShift provides a lot of useful information as environment variables.
+See http://openshift.github.io/documentation/oo_user_guide.html#environment-variables
+for the full list of them.
+
+Below is the environment variables that `plack` cartridge provides.
+
 - OPENSHIFT_PLACK_LOG_DIR :
   Directory path in which you should store your log files. It is up to
   you to write and rotate logs in this directory. The log files are
