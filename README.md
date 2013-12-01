@@ -15,7 +15,7 @@ configuration.
 
 First, create your app with the stable release.
 
-    $ rhc create-app -a YOUR_APP_NAME -t https://raw.github.com/debug-ito/openshift-cartridge-plack/tree/0.0.1/metadata/manifest.yml
+    $ rhc create-app -a YOUR_APP_NAME -t https://raw.github.com/debug-ito/openshift-cartridge-plack/0.0.1/metadata/manifest.yml
 
 Do not use the master branch because it may be broken when I'm
 debugging something.
