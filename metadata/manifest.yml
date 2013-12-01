@@ -79,4 +79,4 @@ Endpoints:
     Backend: ''
     Options:
       health: true
-Source-Url: http://github.com/debug-ito/openshift-cartridge-plack.git
+Source-Url: https://github.com/debug-ito/openshift-cartridge-plack/archive/0.0.1.zip
