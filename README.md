@@ -13,16 +13,17 @@ configuration.
 
 # How to Use
 
-First, create your app with the stable release.
+First, create your app with the stable release. (Do not use the master
+branch because it may be broken when I'm debugging something.)
 
     $ rhc create-app -a YOUR_APP_NAME -t https://raw.github.com/debug-ito/openshift-cartridge-plack/0.0.1/metadata/manifest.yml
 
-Do not use the master branch because it may be broken when I'm
-debugging something.
+Because this installs some CPAN modules in the cloud, it takes some
+time. Please be patient.
 
-Then, edit `app.psgi` created in `YOUR_APP_NAME` directory, commit the
-change and `git push` it. The PSGI application is executed in the
-cloud.
+After that, `YOUR_APP_NAME` directory is created. Then edit `app.psgi`
+in `YOUR_APP_NAME` directory, commit the change and `git push` it. The
+PSGI application is executed in the cloud.
 
 See README.md created in `YOUR_APP_NAME` directory for further details.
 
