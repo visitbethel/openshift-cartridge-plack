@@ -6,8 +6,6 @@ Version: '5.10'
 License: GPL v2
 License-Url: https://metacpan.org/pod/Plack
 Vendor: Tatsuhiko Miyagawa
-Cartridge-Version: 0.1.0
-Compatible-Versions: []
 Cartridge-Vendor: debug_ito
 Categories:
 - service
@@ -79,4 +77,6 @@ Endpoints:
     Backend: ''
     Options:
       health: true
+Compatible-Versions: []
+Cartridge-Version: 0.1.0
 Source-Url: http://github.com/debug-ito/openshift-cartridge-plack.git
