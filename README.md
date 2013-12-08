@@ -16,7 +16,7 @@ configuration.
 First, create your app with the stable release. (Do not use the master
 branch because it may be broken when I'm debugging something.)
 
-    $ rhc create-app -a YOUR_APP_NAME -t https://raw.github.com/debug-ito/openshift-cartridge-plack/0.0.2/metadata/manifest.yml
+    $ rhc create-app -a YOUR_APP_NAME -t https://raw.github.com/debug-ito/openshift-cartridge-plack/release_0.1.0/metadata/manifest.yml
 
 Because this installs some CPAN modules in the cloud, it takes some
 time. Please be patient.

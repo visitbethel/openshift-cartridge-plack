@@ -79,4 +79,4 @@ Endpoints:
       health: true
 Compatible-Versions: []
 Cartridge-Version: 0.1.0
-Source-Url: http://github.com/debug-ito/openshift-cartridge-plack.git
+Source-Url: https://github.com/debug-ito/openshift-cartridge-plack/archive/release_0.1.0.zip
