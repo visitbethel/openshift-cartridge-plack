@@ -1,11 +1,7 @@
 #!/bin/bash
 
 source $OPENSHIFT_CARTRIDGE_SDK_BASH
-
-pipe_client_message() {
-    sed -u 's/^/CLIENT_MESSAGE:  /'
-}
-
+source "$OPENSHIFT_PLACK_DIR/bin/mysdk"
 
 LIB_DIR="$OPENSHIFT_PLACK_DIR/local"
 export PATH="$LIB_DIR/bin:$PATH"

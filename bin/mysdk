@@ -1,0 +1,4 @@
+
+pipe_client_message() {
+    sed -u 's/^/CLIENT_MESSAGE:  /'
+}

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+source $OPENSHIFT_CARTRIDGE_SDK_BASH
+source "$OPENSHIFT_PLACK_DIR/bin/mysdk"
+
 LIB_DIR="${OPENSHIFT_PLACK_DIR}/local"
 export PERL_CPANM_OPT="--quiet --notest -l $LIB_DIR"
 export PATH="$LIB_DIR/bin:$PATH"
@@ -13,18 +16,17 @@ daemon_control() {
 tidy_directory() {
     local dir="$1"
     if [ "x$dir" != "x" -a -d "$dir" ]; then
-        echo "-----> Clean up under $dir"
-        rm -vfr "$opt" "$dir"/*
-        mkdir -p "$dir"
+        client_message "-----> Clean up under $dir"
+        rm -vfr "$opt" "$dir"/* 2>&1 | pipe_client_message
     fi
 }
 
 tidy() {
     shopt -s dotglob
-    echo "-----> Start tidying up"
+    client_message "-----> Start tidying up"
     tidy_directory "$OPENSHIFT_PLACK_LOG_DIR"
     tidy_directory "$PERL_CPANM_HOME"
-    echo "-----> Done"
+    client_message "-----> Done"
 }
 
 build() {
