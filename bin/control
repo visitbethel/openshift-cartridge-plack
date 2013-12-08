@@ -10,10 +10,20 @@ daemon_control() {
     exit $?
 }
 
+tidy_directory() {
+    local dir="$1"
+    if [ "x$dir" != "x" -a -d "$dir" ]; then
+        echo "-----> Clean up under $dir"
+        rm -vfr "$opt" "$dir"/*
+        mkdir -p "$dir"
+    fi
+}
+
 tidy() {
-    echo "-----> Clean up logs in $OPENSHIFT_PLACK_LOG_DIR"
     shopt -s dotglob
-    rm -vf "$OPENSHIFT_PLACK_LOG_DIR"/*
+    echo "-----> Start tidying up"
+    tidy_directory "$OPENSHIFT_PLACK_LOG_DIR"
+    tidy_directory "$PERL_CPANM_HOME"
     echo "-----> Done"
 }
 
