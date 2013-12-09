@@ -11,7 +11,7 @@ server while `perl` cartridge is limited to Apache HTTPD + mod_perl
 configuration.
 
 
-# How to Use
+## How to Use
 
 First, create your app with the stable release. (Do not use the master
 branch because it may be broken when I'm debugging something.)
@@ -28,7 +28,7 @@ PSGI application is executed in the cloud.
 See README.md created in `YOUR_APP_NAME` directory for further details.
 
 
-# Acknowledgement
+## Acknowledgement
 
 * perl http://www.perl.org/
 * Plack/PSGI http://plackperl.org/
@@ -38,7 +38,7 @@ See README.md created in `YOUR_APP_NAME` directory for further details.
   https://github.com/miyagawa/heroku-buildpack-perl/blob/master/bin/compile
 
 
-# Author
+## Author
 
 * Toshio Ito - https://metacpan.org/author/TOSHIOITO
 
