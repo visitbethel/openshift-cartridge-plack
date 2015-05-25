@@ -1,2 +1,13 @@
 requires "Dancer2";
 requires "DBD::SQLite";
+requires "Dancer2";
+requires "DBD::SQLite";
+requires "Starman";
+requires "Moose";
+requires "MooseX::NonMoose";
+requires "String::CRC32";
+requires "Math::Round";
+requires "Math::Polygon";
+requires "Log::Log4perl";
+requires "Cache::FileCache";
+
